@@ -16,14 +16,16 @@ echo [0] CHASECAM
 echo [1] FLASHLIGHT (Unavailable)
 echo [2] FOOTSTEPS
 echo [3] HLFLASHLIGHT (Unavailable)
+echo [4] GRAVITYGUN (Unavailable)
 echo.
-choice /c 0123 /n /m "Project Number: "
+choice /c 01234 /n /m "Project Number: "
 echo.
 
 if %ERRORLEVEL%==1 goto compile_chasecam
 if %ERRORLEVEL%==2 exit
 if %ERRORLEVEL%==3 goto compile_footsteps
 if %ERRORLEVEL%==4 exit
+if %ERRORLEVEL%==5 exit
 exit
 
 :compile_chasecam
@@ -48,6 +50,12 @@ goto build
 set PROJECT_FOLDER=project_hlflashlight
 set PROJECT_NAME=hlflashlight
 set PROJECT_LIBNAME=hl_light
+goto build
+
+:compile_gravitygun
+set PROJECT_FOLDER=project_gravitygun
+set PROJECT_NAME=gravitygun
+set PROJECT_LIBNAME=gravgun
 goto build
 
 :build

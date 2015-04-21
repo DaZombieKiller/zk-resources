@@ -39,7 +39,7 @@ Z_SCRIPT(SCR_FOOTSTEPS) ENTER void Footsteps (void)
 	
 	while (true)
 	{
-		if (!ACS_GetActorZ(0) - ACS_GetActorFloorZ(0))
+		if (!(ACS_GetActorZ(0) - ACS_GetActorFloorZ(0)))
 		{
 			flat = ACSStrToChar(ACS_StrParam("%LS", s"STEP_FLATS"));
 			token = strtok(flat, ":");
