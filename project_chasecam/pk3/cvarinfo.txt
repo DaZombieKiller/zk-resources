@@ -1,0 +1,3 @@
+// CVar Info
+user noarchive bool chase_active = true;
+user int chase_camtype = 1;

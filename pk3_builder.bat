@@ -12,7 +12,7 @@ echo.
 echo === Choosing Project ===
 echo Choose which project to compile
 echo.
-echo [0] CHASECAM (Unavailable)
+echo [0] CHASECAM
 echo [1] FLASHLIGHT (Unavailable)
 echo [2] FOOTSTEPS
 echo [3] HLFLASHLIGHT (Unavailable)
@@ -20,7 +20,7 @@ echo.
 choice /c 0123 /n /m "Project Number: "
 echo.
 
-if %ERRORLEVEL%==1 exit
+if %ERRORLEVEL%==1 goto compile_chasecam
 if %ERRORLEVEL%==2 exit
 if %ERRORLEVEL%==3 goto compile_footsteps
 if %ERRORLEVEL%==4 exit
