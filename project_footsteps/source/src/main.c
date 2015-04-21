@@ -10,6 +10,24 @@
 #include "util.h"
 #include "main.h"
 
+// Function
+int ZanSqrt (int number)
+{
+	if (number <= 3)
+		return number > 0;
+	
+	int oldAns = number >> 1,
+	newAns = (oldAns + number / oldAns) >> 1;
+	
+	while (newAns < oldAns)
+	{
+		oldAns = newAns;
+		newAns = (oldAns + number / oldAns) >> 1;
+	}
+	
+	return oldAns;
+}
+
 // Scripts
 Z_SCRIPT(SCR_FOOTSTEPS) ENTER void Footsteps (void)
 {
@@ -28,7 +46,14 @@ Z_SCRIPT(SCR_FOOTSTEPS) ENTER void Footsteps (void)
 			
 			vx = ACS_GetActorVelX(0);
 			vy = ACS_GetActorVelY(0);
+			#ifdef ZAN_ACS
+			// Zandronum doesn't support FixedSqrt yet, so
+			// we'll need to use a custom function.
+			speed = ((accum)ZanSqrt(vx * vx + vy * vy)) / 16k;
+			#else
 			speed = ACS_FixedSqrt(vx * vx + vy * vy) / 16k;
+			#endif
+			
 			if (speed > 1k)
 				speed = 1k;
 			

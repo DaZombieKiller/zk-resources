@@ -7,6 +7,9 @@
 // Defines
 #define SCR_FOOTSTEPS 420
 
+// Functions
+int ZanSqrt (int number);
+
 // Scripts
 Z_SCRIPT(SCR_FOOTSTEPS) ENTER void Footsteps (void);
 
