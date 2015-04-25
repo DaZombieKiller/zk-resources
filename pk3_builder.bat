@@ -7,6 +7,7 @@ choice /c yn /n /m "Compile for Zandronum? [Y,N] "
 
 if %ERRORLEVEL%==1 set ZANDRONUM_COMPILE=1
 if %ERRORLEVEL%==2 set ZANDRONUM_COMPILE=0
+set ZANDRONUM_COMPAT=0
 
 echo.
 echo === Choosing Project ===
@@ -63,31 +64,34 @@ echo === Compiling Source Code ===
 set CC=.\GDCC\gdcc-cc.exe
 set AS=.\GDCC\gdcc-as.exe
 set LD=.\GDCC\gdcc-ld.exe
-if exist .\%PROJECT_FOLDER%\source\bin del .\%PROJECT_FOLDER%\source\bin /s /q >nul 2>&1
-if not exist .\%PROJECT_FOLDER%\source\bin mkdir .\%PROJECT_FOLDER%\source\bin
-if not exist .\%PROJECT_FOLDER%\source\bin\libgdcc mkdir .\%PROJECT_FOLDER%\source\bin\libgdcc
-if not exist .\%PROJECT_FOLDER%\pk3\acs mkdir .\%PROJECT_FOLDER%\pk3\acs
-if not exist .\%PROJECT_FOLDER%\source\inc mkdir .\%PROJECT_FOLDER%\source\inc
-if not exist .\%PROJECT_FOLDER%\source\src mkdir .\%PROJECT_FOLDER%\source\src
+if exist ".\%PROJECT_FOLDER%\source\bin" del ".\%PROJECT_FOLDER%\source\bin" /s /q >nul 2>&1
+if not exist ".\%PROJECT_FOLDER%\source\bin" mkdir ".\%PROJECT_FOLDER%\source\bin"
+if not exist ".\%PROJECT_FOLDER%\source\bin\libgdcc" mkdir ".\%PROJECT_FOLDER%\source\bin\libgdcc"
+if not exist ".\%PROJECT_FOLDER%\pk3\acs" mkdir ".\%PROJECT_FOLDER%\pk3\acs"
+if not exist ".\%PROJECT_FOLDER%\source\inc" mkdir ".\%PROJECT_FOLDER%\source\inc"
+if not exist ".\%PROJECT_FOLDER%\source\src" mkdir ".\%PROJECT_FOLDER%\source\src"
 echo ZDACS-asm.ir
-%AS% --bc-target=ZDoom -o .\%PROJECT_FOLDER%\source\bin\libgdcc\ZDACS-asm.ir .\GDCC\lib\src\libGDCC\ZDACS\*.asm
+%AS% --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\source\bin\libgdcc\ZDACS-asm.ir" .\GDCC\lib\src\libGDCC\ZDACS\*.asm
 echo c.ir
-%CC% --bc-target=ZDoom -o .\%PROJECT_FOLDER%\source\bin\libgdcc\c.ir .\GDCC\lib\src\libGDCC\*.c
+%CC% --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\source\bin\libgdcc\c.ir" .\GDCC\lib\src\libGDCC\*.c
 echo libGDCC.ir
-%LD% -c --bc-target=ZDoom -o .\%PROJECT_FOLDER%\source\bin\libgdcc\libGDCC.ir .\%PROJECT_FOLDER%\source\bin\libgdcc\*.ir
+%LD% -c --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\source\bin\libgdcc\libGDCC.ir" ".\%PROJECT_FOLDER%\source\bin\libgdcc\*.ir"
 echo libc.ir
-%CC% --bc-target=ZDoom -o .\%PROJECT_FOLDER%\source\bin\libgdcc\libc.ir .\GDCC\lib\src\libc\*.c
+%CC% --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\source\bin\libgdcc\libc.ir" .\GDCC\lib\src\libc\*.c
 echo %PROJECT_LIBNAME%.ir
-if %ZANDRONUM_COMPILE%==1 %CC% -ibase\inc -i%PROJECT_FOLDER%\source\inc --bc-target=ZDoom -DZAN_ACS -o .\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir .\%PROJECT_FOLDER%\source\src\*.c .\base\src\*.c
-if not %ZANDRONUM_COMPILE%==1 %CC% -ibase\inc -i%PROJECT_FOLDER%\source\inc --bc-target=ZDoom -o .\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir .\%PROJECT_FOLDER%\source\src\*.c .\base\src\*.c
+if %ZANDRONUM_COMPILE%==1 %CC% -ibase\inc -i"%PROJECT_FOLDER%\source\inc" --bc-target=ZDoom -DZAN_ACS -o ".\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir" ".\%PROJECT_FOLDER%\source\src\*.c" .\base\src\*.c
+if not %ZANDRONUM_COMPILE%==1 (
+	if %ZANDRONUM_COMPAT%==1 echo %CC% -ibase\inc -i"%PROJECT_FOLDER%\source\inc" --bc-target=ZDoom -DZAN_COMPAT -o ".\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir" ".\%PROJECT_FOLDER%\source\src\*.c" .\base\src\*.c
+	if not %ZANDRONUM_COMPAT%==1 echo %CC% -ibase\inc -i"%PROJECT_FOLDER%\source\inc" --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir" ".\%PROJECT_FOLDER%\source\src\*.c" .\base\src\*.c
+)
 echo %PROJECT_LIBNAME%.bin
-%LD% --bc-target=ZDoom -o .\%PROJECT_FOLDER%\pk3\acs\%PROJECT_LIBNAME%.bin .\%PROJECT_FOLDER%\source\bin\*.ir .\%PROJECT_FOLDER%\source\bin\libgdcc\*.ir
+%LD% --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\pk3\acs\%PROJECT_LIBNAME%.bin" ".\%PROJECT_FOLDER%\source\bin\*.ir" ".\%PROJECT_FOLDER%\source\bin\libgdcc\*.ir"
 echo Finished.
 echo.
 
 echo === Making PK3 ===
-echo Creating %PROJECT_NAME%.pk3...
-tools\7za.exe a -tzip %PROJECT_NAME%.pk3 .\%PROJECT_FOLDER%\pk3\* >nul
+echo Creating "%PROJECT_NAME%.pk3"...
+tools\7za.exe a -tzip "%PROJECT_NAME%.pk3" ".\%PROJECT_FOLDER%\pk3\*" >nul
 echo Finished.
 echo.
 
