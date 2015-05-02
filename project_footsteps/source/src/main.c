@@ -57,8 +57,8 @@ Z_SCRIPT(SCR_FOOTSTEPS) ENTER void Footsteps (void)
 			if (speed > 1k)
 				speed = 1k;
 			
-			delay = 35k - (25 * speed);
-			volume = speed;
+			delay = (35k - (25 * speed)) * ACS_GetCVarFixed(s"fs_delay_mul");
+			volume = speed * ACS_GetCVarFixed(s"fs_volume_mul");
 			
 			while (token != NULL)
 			{
