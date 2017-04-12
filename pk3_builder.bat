@@ -70,22 +70,20 @@ if not exist ".\%PROJECT_FOLDER%\source\bin\libgdcc" mkdir ".\%PROJECT_FOLDER%\s
 if not exist ".\%PROJECT_FOLDER%\pk3\acs" mkdir ".\%PROJECT_FOLDER%\pk3\acs"
 if not exist ".\%PROJECT_FOLDER%\source\inc" mkdir ".\%PROJECT_FOLDER%\source\inc"
 if not exist ".\%PROJECT_FOLDER%\source\src" mkdir ".\%PROJECT_FOLDER%\source\src"
-echo ZDACS-asm.ir
-%AS% --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\source\bin\libgdcc\ZDACS-asm.ir" .\GDCC\lib\src\libGDCC\ZDACS\*.asm
-echo c.ir
-%CC% --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\source\bin\libgdcc\c.ir" .\GDCC\lib\src\libGDCC\*.c
-echo libGDCC.ir
-%LD% -c --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\source\bin\libgdcc\libGDCC.ir" ".\%PROJECT_FOLDER%\source\bin\libgdcc\*.ir"
-echo libc.ir
-%CC% --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\source\bin\libgdcc\libc.ir" .\GDCC\lib\src\libc\*.c
+
+echo Makelib...
+.\gdcc\gdcc-makelib --bc-target ZDoom libGDCC -c -o ".\%PROJECT_FOLDER%\source\bin\libgdcc\libGDCC.ir"
+.\gdcc\gdcc-makelib --bc-target ZDoom libc    -c -o ".\%PROJECT_FOLDER%\source\bin\libgdcc\libc.ir"
+
 echo %PROJECT_LIBNAME%.ir
-if %ZANDRONUM_COMPILE%==1 %CC% -ibase\inc -i"%PROJECT_FOLDER%\source\inc" --bc-target=ZDoom -DZAN_ACS -o ".\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir" ".\%PROJECT_FOLDER%\source\src\*.c" .\base\src\*.c
+if %ZANDRONUM_COMPILE%==1 %CC% --bc-target ZDoom -DZAN_ACS ".\%PROJECT_FOLDER%\source\src\*.c" .\base\src\*.c -ibase\inc -i "%PROJECT_FOLDER%\source\inc" -c -o ".\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir"
 if not %ZANDRONUM_COMPILE%==1 (
-	if %ZANDRONUM_COMPAT%==1 %CC% -ibase\inc -i"%PROJECT_FOLDER%\source\inc" --bc-target=ZDoom -DZAN_COMPAT -o ".\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir" ".\%PROJECT_FOLDER%\source\src\*.c" .\base\src\*.c
-	if not %ZANDRONUM_COMPAT%==1 %CC% -ibase\inc -i"%PROJECT_FOLDER%\source\inc" --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir" ".\%PROJECT_FOLDER%\source\src\*.c" .\base\src\*.c
+	if %ZANDRONUM_COMPAT%==1 %CC% --bc-target ZDoom -DZAN_COMPAT ".\%PROJECT_FOLDER%\source\src\*.c" .\base\src\*.c -ibase\inc -i "%PROJECT_FOLDER%\source\inc" -c -o ".\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir"
+	if not %ZANDRONUM_COMPAT%==1 %CC% --bc-target ZDoom ".\%PROJECT_FOLDER%\source\src\*.c" .\base\src\*.c -ibase\inc -i "%PROJECT_FOLDER%\source\inc" -c -o ".\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir"
 )
-echo %PROJECT_LIBNAME%.bin
-%LD% --bc-target=ZDoom -o ".\%PROJECT_FOLDER%\pk3\acs\%PROJECT_LIBNAME%.bin" ".\%PROJECT_FOLDER%\source\bin\*.ir" ".\%PROJECT_FOLDER%\source\bin\libgdcc\*.ir"
+echo %PROJECT_LIBNAME%.o
+%LD% --bc-target ZDoom ".\%PROJECT_FOLDER%\source\bin\%PROJECT_LIBNAME%.ir" ".\%PROJECT_FOLDER%\source\bin\*.ir" ".\%PROJECT_FOLDER%\source\bin\libgdcc\*.ir" -o ".\%PROJECT_FOLDER%\pk3\acs\%PROJECT_LIBNAME%.o"
+
 echo Finished.
 echo.
 
