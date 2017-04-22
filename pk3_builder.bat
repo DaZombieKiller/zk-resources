@@ -29,16 +29,16 @@ if %ERRORLEVEL%==4 exit
 if %ERRORLEVEL%==5 exit
 exit
 
-:compile_chasecam
-set PROJECT_FOLDER=project_chasecam
-set PROJECT_NAME=chasecam
-set PROJECT_LIBNAME=chasecam
-goto build
-
 :compile_flashlight
 set PROJECT_FOLDER=project_flashlight
 set PROJECT_NAME=flashlight
 set PROJECT_LIBNAME=f_light
+goto build
+
+:compile_chasecam
+set PROJECT_FOLDER=project_chasecam
+set PROJECT_NAME=chasecam
+set PROJECT_LIBNAME=chasecam
 goto build
 
 :compile_footsteps
