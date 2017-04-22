@@ -1,0 +1,14 @@
+AddOptionMenu "OptionsMenu"
+{
+	Submenu "Footsteps Options", "FootstepOptions"
+}
+
+OptionMenu "FootstepOptions"
+{
+title "Footstep Options"
+
+StaticText " "
+Option  "Enabled", "fs_enabled","OnOff"
+Slider "Delay",	"fs_delay_mul",0.0,1.0,0.1
+Slider "Volume", "fs_volume_mul",0.0,1.0,0.1
+}
