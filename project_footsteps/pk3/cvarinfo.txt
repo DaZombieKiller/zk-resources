@@ -1,3 +1,4 @@
 // CVar Info
+server int fs_enabled = 1;
 server float fs_volume_mul = 1.0;
 server float fs_delay_mul = 1.0;
